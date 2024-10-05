@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% import "bootstrap_wtf.html" as wtf %}
+
+{% block content %}
+
+ <style>
+     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+    body {
+    background-color: #0d1117;
+    padding: 0;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.blockchain-content {
+    font-family: 'Poppins', sans-serif;
+    background-color: #0d1117;
+    color: #c9d1d9;
+    margin: 0;
+    padding: 0px;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.container {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto; /* Allow horizontal scrolling if needed */
+    padding: 0 10px; /* Add padding to the container */
+}
+
+.block {
+    border: 1px solid #30363d;
+    padding: 20px;
+    background-color: #161b22;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    width: 100%;
+    overflow: hidden; /* Ensure content doesn't overflow */
+
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #30363d;
+    padding: 12px;
+    text-align: left;
+
+}
+
+th {
+    background-color: #21262d;
+    color: #58a6ff;
+}
+
+tr:nth-child(even) {
+    background-color: #161b22;
+}
+
+tr:hover {
+    background-color: #21262d;
+}
+
+a {
+    color: #58a6ff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 680px) {
+    .container {
+
+        max-width: 100%;
+        width: 100%;
+        text-align: center;
+        margin-left: 5px;
+    }
+
+    .block {
+        padding: 0px;
+        width: fit-content;
+
+    }
+
+    table {
+        zoom: 0.8; /* Adjust the zoom level as needed */
+    }
+
+    table th, table td {
+        padding: 5px;
+        font-size: 0.7em;
+    }
+
+    .unique-container h1 {
+        font-size: 1.5em; /* Adjust font size for smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    table {
+
+
+    }
+}
+
+nav {
+    width: 100%;
+}
+
+
+
+
+</style>
+
+<div class="blockchain-content">
+    <div class="container">
+        <div id="blockchain" class="block"></div>
+    </div>
+    <pre id="json-data"></pre>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var chain = {{ data|safe }};
+
+        function createTable(data) {
+            let table = '<table><tr><th>Index</th><th>Timestamp</th><th>Proof</th><th>Previous Hash</th></tr>';
+            data.forEach(block => {
+                table += `<tr>
+                    <td>${block.index}</td>
+                    <td>${block.timestamp}</td>
+                    <td>${block.proof}</td>
+                    <td>${block.previous_hash}</td>
+                </tr>`;
+            });
+            table += '</table>';
+            return table;
+        }
+
+        function createBlockchain(data) {
+            let blockchainDiv = document.getElementById('blockchain');
+            blockchainDiv.innerHTML = createTable(data);
+        }
+
+        createBlockchain(chain);
+    });
+
+    </script>
+
+{% endblock %}

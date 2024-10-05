@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% import "bootstrap_wtf.html" as wtf %}
+
+{% block content %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+    /* Importing a nerdy font */
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+.container {width: 100%;
+        max-width: 120%;}
+    body {
+        margin: 0;
+        background-color: #000; /* Set the background color to black */
+        color: #00ffcc; /* Default text color */
+        font-family: 'Orbitron', sans-serif;
+    }
+
+    .unique-container {
+        font-family: 'Press Start 2P', cursive;
+        background-color: #1a1a1a;
+        padding: 20px;
+        min-height: 100vh; /* Ensure the container takes at least the full height of the viewport */
+    }
+
+    .unique-container h1 {
+        text-align: center;
+        color: #ff00ff;
+        text-shadow: 2px 2px #000;
+    }
+
+    .table-container {
+        margin-top: 20px;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table th, .table td {
+        border: 1px solid #00ffcc;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .table th {
+        background-color: #333;
+        color: #00ffcc;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #2a2a2a;
+    }
+
+    .table-striped tbody tr:nth-of-type(even) {
+        background-color: #1a1a1a;
+    }
+
+    .medal-icon.easy {
+        background-color: #1a1a1a;
+        color: #cd7f32; /* Bronze */
+        animation: blink 1s infinite;
+        font-size: 1.2em
+    }
+
+    .medal-icon.medium {
+        background-color: #1A1A1AFF;
+        color: #c0c0c0; /* Silver */
+        animation: blink 1s infinite;
+        font-size: 1.2em
+    }
+    .medal-icon.hard {
+        background-color: #1A1A1AFF;
+        color: #ffd700; /* Gold */
+        animation: blink 1s infinite;
+        font-size: 1.2em
+    }
+    .medal-icon.extreme {
+        background-color: #1A1A1AFF;
+        color: #000000; /* Black */
+        animation: blink 1s infinite;
+        font-size: 1.2em
+    }
+
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+    }
+    /* Media query for mobile devices */
+@media (max-width: 680px) {
+    .unique-container {
+        padding: 5px;
+    }
+
+    .table th, .table td {
+        padding: 5px;
+        font-size: 0.7em
+
+    }
+
+    .unique-container h1 {
+        font-size: 1.5em; /* Adjust font size for smaller screens */
+    }
+}
+
+    .form-control {
+    background-color: #333;
+    color: #00ffcc;
+    border: 1px solid #00ffcc;
+    cursor: pointer;
+}
+
+.form-control:focus {
+    background-color: #444;
+    color: #00ffcc;
+    border-color: #ff00ff;
+    box-shadow: 0 0 10px #ff00ff;
+}
+
+.form-control:hover {
+    border-color: #ff00ff;
+}
+
+
+    .unique-container label {
+        color: #00ffcc;
+    }
+
+    .unique-container select {
+        appearance: none;
+        background-color: #333;
+        color: #00ffcc;
+        border: 1px solid #00ffcc;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .unique-container select:focus {
+        border-color: #ff00ff;
+        box-shadow: 0 0 10px #ff00ff;
+    }
+
+    .unique-container select option {
+        background-color: #333;
+        color: #00ffcc;
+    }
+
+    .unique-container select option:checked {
+        background-color: #444;
+    }
+
+    .unique-container select option:hover {
+        background-color: #555;
+    }
+</style>
+
+
+<div class="container">
+        <div class="unique-container">
+            <h1>Leaderboard</h1>
+            <div class="form-group">
+                <label for="difficulty">Filter by Difficulty:</label>
+                <select id="difficulty" class="form-control" onchange="filterDifficulty()">
+                    <option value="all" {% if difficulty  == 'all' %}selected{% endif %}>All</option>
+                    <option value="easy" {% if difficulty == 'easy' %}selected{% endif %}>Easy</option>
+                    <option value="medium" {% if difficulty == 'medium' %}selected{% endif %}>Medium</option>
+                    <option value="hard" {% if difficulty == 'hard' %}selected{% endif %}>Hard</option>
+                    <option value="extreme" {% if difficulty == 'extreme' %}selected{% endif %}>Extreme</option>
+                </select>
+            </div>
+            <div class="table-container">
+                <table id="speedTable" class="table table-striped", width="100%">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Difficulty</th>
+                            <th>Speed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in data %}
+                        <tr>
+                            <td>
+                                {{ entry.username }}
+                                {% if entry.difficulty == 'easy' and entry.speed == lowest_easy %}
+                                    <span class="medal-icon easy">&#x1F949;</span> <!-- Bronze Medal -->
+                                {% elif entry.difficulty == 'medium' and entry.speed == lowest_medium %}
+                                    <span class="medal-icon medium">&#x1F948;</span> <!-- Silver Medal -->
+                                {% elif entry.difficulty == 'hard' and entry.speed == lowest_hard %}
+                                    <span class="medal-icon hard">&#x1F947;</span> <!-- Gold Medal -->
+                                {% elif entry.difficulty == 'extreme' and entry.speed == lowest_extreme %}
+                                    <span class="medal-icon extreme">&#x1F3C6;</span> <!-- Trophy for Extreme -->
+                                {% endif %}
+                            </td>
+                            <td>{{ entry.difficulty }}</td>
+                            <td>{{ entry.speed }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        function sortTableBySpeed() {
+    const table = document.getElementById('speedTable');
+    const rows = Array.from(table.rows).slice(1); // Exclude the header row
+
+    rows.sort((rowA, rowB) => {
+        const speedA = parseFloat(rowA.cells[2].innerText); // Assuming speed is in the third column
+        const speedB = parseFloat(rowB.cells[2].innerText);
+        return speedA - speedB;
+    });
+
+    rows.forEach(row => table.appendChild(row));
+}
+
+        function filterDifficulty() {
+            const difficulty = document.getElementById('difficulty').value;
+            window.location.href = `/leaderboard?difficulty=${difficulty}`;
+        }
+
+        // Set the selected value of the dropdown based on the URL parameter
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const difficulty = urlParams.get('difficulty');
+            if (difficulty) {
+                document.getElementById('difficulty').value = difficulty;
+            }
+            sortTableBySpeed(); // Sort the table when the page loads
+        });
+    </script>
+{% endblock %}
+
+
+
+
+

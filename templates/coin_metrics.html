@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <div class="container tech-themed-container">
+        <h1 class="tech-header">Coin Metrics</h1>
+        <div class="coin-metrics-wrapper">
+            <table class="coin-metrics-table tech-table">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Total Supply</td>
+                        <td>{{ total_supply }}</td>
+                    </tr>
+                    <tr>
+                        <td>Circulating Supply</td>
+                        <td>{{ circulating_supply }}</td>
+                    </tr>
+                    <tr>
+                        <td>Remaining Supply for Rewards</td>
+                        <td>{{ remaining_supply }}</td>
+                    </tr>
+                    <tr>
+                        <td>Mined Blocks</td>
+                        <td>{{ mined_blocks }}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Transactions</td>
+                        <td>{{ total_transactions }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <style>
+        /* Container */
+        .tech-themed-container {
+            background: linear-gradient(135deg, #1a1f36, #282c4f);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 40px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header */
+        .tech-header {
+            color: #ffffff;
+            text-transform: uppercase;
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-family: 'Roboto', sans-serif;
+            letter-spacing: 2px;
+        }
+
+        /* Table Wrapper */
+        .coin-metrics-wrapper {
+            overflow-x: auto;
+        }
+
+        /* Table */
+        .tech-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #1f243e;
+            color: #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Table Header */
+        .tech-table th {
+            background-color: #3a416f;
+            color: #ffffff;
+            padding: 10px;
+            text-align: left;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        /* Table Rows */
+        .tech-table td {
+            padding: 10px;
+            border-bottom: 1px solid #3a416f;
+        }
+
+        .tech-table tr:nth-child(even) {
+            background-color: #2e3358;
+        }
+
+        .tech-table tr:hover {
+            background-color: #42497c;
+        }
+    </style>
+
+{% endblock content %}

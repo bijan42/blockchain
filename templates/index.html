@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% import "bootstrap_wtf.html" as wtf %}
+
+{% block content %}
+
+    <style>
+    body {
+        background-image: url('https://th.bing.com/th/id/R.323fd41aa86325525262450d6dd7fda2?rik=t7KS5Mi28F4qcA&pid=ImgRaw&r=0');
+        background-size: cover;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        color: White;}
+
+    h1 {
+        font-family: 'Arial', sans-serif;
+        color: white;
+    }
+
+    </style>
+    <h1>Welcome, {{ current_user.username }}!</h1>
+    {% if form %}
+    {{ wtf.quick_form(form) }}
+    {% endif %}
+    {% for post in posts %}
+        {% include '_post.html' %}
+    {% endfor %}
+    <nav aria-label="Post navigation">
+        <ul class="pagination">
+            <li class="page-item{% if not prev_url %} disabled{% endif %}">
+                <a class="page-link" href="{{ prev_url }}">
+                    <span aria-hidden="true">&larr;</span> Newer posts
+                </a>
+            </li>
+            <li class="page-item{% if not next_url %} disabled{% endif %}">
+                <a class="page-link" href="{{ next_url }}">
+                    Older posts <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+{% endblock %}
+
+
+
+

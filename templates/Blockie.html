@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+ <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+        body {
+            background-image: url("https://nftevening.com/wp-content/uploads/2021/12/rm373batch16-56a-scaled.jpg");
+            background-size: cover;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+
+            font-family: 'Orbitron', sans-serif;
+            width: 100%;
+
+        }
+
+        .container {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        input[type="submit"] {
+            background: linear-gradient(145deg, #00ffcc, #0066ff);
+            border: none;
+            color: white;
+            padding: 25px 50px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 25px;
+            width: 100%;
+            margin-top: 20px;
+            border-radius: 50px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 255, 204, 0.5);
+        }
+
+        input[type="submit"]:hover {
+            transform: scale(1.035);
+            box-shadow: 0 6px 20px rgba(0, 255, 204, 0.7);
+        }
+
+        img {
+            margin-top: -50px;
+            margin-bottom: -50px;
+        }
+    </style>
+
+<body>
+
+    <div class="container mt-5">
+        <div>
+            <form method="POST" id="1" onsubmit="return disableButton(this.submit_button2)">
+                <input type="submit" name="submit_button2" value="Mine block">
+            </form>
+            <form name="1" method="POST">
+                <input type="submit" name="submit_button1" value="Block explorer">
+            </form>
+            <form method="POST">
+                <input type="submit" name="submit_button3" value="Check integrity">
+            </form>
+            <form method="POST">
+                <input type="submit" name="submit_button4" value="Leaderboard">
+            </form>
+        </div>
+    </div>
+</body>
+    {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+

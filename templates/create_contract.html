@@ -1,0 +1,174 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+    /* Scope styles to this specific container */
+    .contract-form-container {
+        padding: 20px;
+        background-color: #1e1e2e;
+        border-radius: 8px;
+        margin-top: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .contract-form-container h1 {
+        color: #bb86fc;
+        text-shadow: 1px 1px 2px #000;
+        margin-bottom: 20px;
+    }
+
+    .contract-form-container label {
+        color: #bb86fc;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .contract-form-container input,
+    .contract-form-container select,
+    .contract-form-container textarea {
+        width: calc(100% - 22px);
+        padding: 8px 10px;
+        margin-bottom: 15px;
+        background-color: #2d2d3a;
+        border: 1px solid #3f51b5;
+        border-radius: 5px;
+        color: #ffffff;
+        transition: border-color 0.2s;
+    }
+
+    .contract-form-container input:focus,
+    .contract-form-container select:focus,
+    .contract-form-container textarea:focus {
+        border-color: #bb86fc;
+        outline: none;
+    }
+
+    .contract-form-container textarea {
+        min-height: 120px;
+        resize: vertical;
+        background-color: #34344b;
+    }
+
+    .contract-form-container .form-group {
+        margin-bottom: 20px;
+    }
+
+    .contract-form-container .btn-submit {
+        padding: 10px 20px;
+        background-color: #3f51b5;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+        font-size: 1.1em;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .contract-form-container .btn-submit:hover {
+        background-color: #5a74db;
+        transform: scale(1.05);
+    }
+
+    .contract-form-container .btn-submit:active {
+        transform: scale(1);
+    }
+
+    .contract-form-container small {
+        color: #aaaaaa;
+        font-size: 0.9em;
+    }
+
+    .expandable-condition {
+        padding: 12px;
+        background-color: #2d2d3a;
+        border: 1px solid #3f51b5;
+        border-radius: 5px;
+        min-height: 200px;
+        resize: vertical;
+        transition: border-color 0.2s;
+        color: #ffffff;
+        margin-bottom: 10px;
+    }
+
+    .expandable-condition:focus {
+        border-color: #bb86fc;
+        outline: none;
+    }
+</style>
+
+<div class="container contract-form-container">
+    <h1>Create a Marketplace Contract or Transaction</h1>
+    <form method="post" class="techy-form">
+        <!-- Type Selection -->
+        <div class="form-group">
+            <label for="contract_type">Type:</label>
+            <select id="contract_type" name="contract_type" onchange="toggleFields()" class="techy-select">
+                <option value="marketplace">Marketplace Contract</option>
+                <option value="transaction">Conditional Transaction</option>
+            </select>
+        </div>
+
+        <!-- Marketplace Contract Fields -->
+        <div id="marketplace_contract_fields">
+            <div class="form-group">
+                <label for="item_name">Item Name:</label>
+                <input type="text" id="item_name" name="item_name" class="techy-input" required>
+            </div>
+            <div class="form-group">
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" class="techy-input" min="1" required>
+            </div>
+        </div>
+
+        <!-- Conditional Transaction Fields -->
+        <div id="transaction_fields" style="display: none;">
+            <div class="form-group">
+                <label for="sender">Sender:</label>
+                <input type="text" id="sender" name="sender" class="techy-input" value="{{ current_user.username }}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="receiver">Receiver:</label>
+                <input type="text" id="receiver" name="receiver" class="techy-input" required>
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount:</label>
+                <input type="number" id="amount" name="amount" class="techy-input" min="1" required>
+            </div>
+            <div class="form-group">
+                <label for="condition">Condition (optional):</label>
+                <textarea id="condition" name="condition" class="expandable-condition"></textarea>
+                <small>Use a simple condition (e.g., <code>sender_balance &gt; 100</code> or <code>receiver_balance == 50</code>). Supported operators: <code>&gt;</code>, <code>&lt;</code>, <code>==</code>, <code>!=</code>, <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>.</small>
+
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Create</button>
+    </form>
+</div>
+
+<script>
+function toggleFields() {
+    var contractType = document.getElementById('contract_type').value;
+
+    var marketplaceFields = document.getElementById('marketplace_contract_fields');
+    var transactionFields = document.getElementById('transaction_fields');
+
+    // Toggle visibility of fields based on contract type
+    marketplaceFields.style.display = (contractType === 'marketplace') ? 'block' : 'none';
+    transactionFields.style.display = (contractType === 'transaction') ? 'block' : 'none';
+
+    // Correctly set required attribute based on contract type
+    document.querySelectorAll('#marketplace_contract_fields input').forEach(input => {
+        input.required = (contractType === 'marketplace');
+    });
+    document.querySelectorAll('#transaction_fields input, #transaction_fields textarea').forEach(input => {
+        input.required = (contractType === 'transaction');
+    });
+}
+
+// Ensure correct fields are shown and required attributes set on page load
+window.onload = toggleFields;
+</script>
+
+{% endblock content %}

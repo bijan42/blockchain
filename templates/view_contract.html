@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block content %}
+<body>
+    <div class="contract-details-container">
+        <h1 class="contract-title">Contract Details</h1>
+
+        <div class="contract-info">
+            <p><span class="info-label">Contract ID:</span> {{ contract.contract_id }}</p>
+            <p><span class="info-label">Contract Data:</span> {{ contract.contract_data }}</p>
+            <p><span class="info-label">Creator:</span> {{ contract.creator }}</p>
+            <p><span class="info-label">Executed:</span> <span class="execution-status {{ 'executed' if contract.is_executed else 'not-executed' }}">{{ 'Yes' if contract.is_executed else 'No' }}</span></p>
+        </div>
+
+        <a href="{{ url_for('account') }}" class="back-button">Back to Account</a>
+    </div>
+</body>
+
+<style>
+    /* Container for contract details */
+    .contract-details-container {
+        background-color: #1e1e2e;
+        color: #cfd8dc;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        max-width: 800px;
+        margin: 40px auto;
+    }
+
+    .contract-title {
+        color: #bb86fc;
+        font-size: 2.2em;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .contract-info p {
+        font-size: 1.1em;
+        margin: 12px 0;
+        padding: 8px;
+        border-bottom: 1px solid #3f3f51;
+    }
+
+    .info-label {
+        font-weight: bold;
+        color: #81a1c1;
+    }
+
+    .execution-status {
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 5px;
+    }
+
+    .execution-status.executed {
+        color: #32cd32;
+        background-color: #243024;
+    }
+
+    .execution-status.not-executed {
+        color: #ff6347;
+        background-color: #302424;
+    }
+
+    .back-button {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 15px;
+        background-color: #bb86fc;
+        color: #1e1e2e;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .back-button:hover {
+        background-color: #9b6acb;
+    }
+</style>
+{% endblock content %}
+

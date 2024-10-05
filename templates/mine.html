@@ -1,0 +1,240 @@
+
+{% extends "base.html" %}
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+    body {
+    background-image: url("https://th.bing.com/th/id/OIP.lcfl7QELvsCd3MmDXr4qiAHaEK?rs=1&pid=ImgDetMain");
+    font-family: 'Orbitron', sans-serif;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    align-items: stretch;
+}
+
+    .button-container {
+        text-align: center;
+        padding: 20px;
+        background-color: #1e1e1e;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        width: 100%;
+        max-width: 100%;
+        animation: fadeIn 1s ease-in-out;
+    }
+    .button-title {
+        font-size: 2em;
+        margin-bottom: 30px;
+        color: #00e5ff;
+        text-shadow: 0 0 15px rgba(0, 229, 255, 0.7);
+        animation: glow 1.5s infinite alternate;
+    }
+    .button-group {
+        display: flex;
+        justify-content: space-around;
+        gap: 40px;
+        flex-wrap: wrap;
+    }
+    .button-group button {
+        padding: 20px 40px;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.2em;
+        cursor: pointer;
+        transition: transform 2s, box-shadow 0.3s, background-color 0.3s, color 0.3s;
+        flex: 1;
+        margin: 10px;
+        background: linear-gradient(145deg, #1e1e1e, #2c2c2c);
+        color: #c0c0c0; /* Lightning silver text color */
+        box-shadow: 5px 5px 15px #0a0a0a, -5px -5px 15px #2e2e2e;
+    }
+
+    .button-group button:hover,
+    .button-group button:focus {
+        transform: scale(1.2);
+        box-shadow: 0 0 30px rgba(0, 229, 255, 0.7), 0 0 60px rgba(0, 229, 255, 0.5), 0 0 90px rgba(0, 229, 255, 0.3);
+    }
+
+    .button-group #easyButton:hover,
+    .button-group #easyButton:focus {
+        background-color: #00ff00; /* Green for easy button */
+        color: green;
+    }
+
+    .button-group #mediumButton:hover,
+    .button-group #mediumButton:focus {
+        background-color: #0000ff; /* Blue for medium button */
+        color: blue;
+    }
+
+    .button-group #hardButton:hover,
+    .button-group #hardButton:focus {
+        background-color: #ff0000; /* Red for hard button */
+        color: red;
+    }
+
+    .button-group #₿Button:hover,
+    .button-group #₿Button:focus {
+        background-color: #ffd700; /* Gold for extreme button */
+        color: #ffd700;
+    }
+    .button-output {
+        margin-top: 40px;
+        padding: 30px;
+        background-color: #2c2c2c;
+        border-radius: 12px;
+        color: #00e5ff;
+        font-family: 'Courier New', Courier, monospace;
+        box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes glow {
+        from {
+            text-shadow: 0 0 15px rgba(0, 229, 255, 0.7), 0 0 30px rgba(0, 229, 255, 0.5), 0 0 45px rgba(0, 229, 255, 0.3);
+        }
+        to {
+            text-shadow: 0 0 30px rgba(0, 229, 255, 0.7), 0 0 45px rgba(0, 229, 255, 0.5), 0 0 60px rgba(0, 229, 255, 0.3);
+        }
+    }
+
+    /* Media query for mobile devices */
+    @media (max-width: 600px) {
+        .button-title {
+            font-size: 2.5em;
+        }
+        .button-group {
+            width: 100%;
+            padding: -30px;
+        }
+        .button-group button {
+            flex: 1 1 100%;
+            font-size: 1em;
+            padding: 10px 10px;
+            width: 100%;
+        }
+    }
+</style>
+    <div class="button-container">
+    <div class="button-title">Select Difficulty</div>
+    <div class="button-group">
+        <button id="easyButton" data-difficulty="easy">Easy</button>
+        <button id="mediumButton" data-difficulty="medium">Medium</button>
+        <button id="hardButton" data-difficulty="hard">Hard</button>
+        <button id="₿Button" data-difficulty="₿">Extreme</button>
+    </div>
+    <div class="button-output" id="output">Output will be displayed here...</div>
+</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const buttons = document.querySelectorAll('button[data-difficulty]');
+            buttons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const difficulty = event.target.getAttribute('data-difficulty');
+                    mineBlock(difficulty);
+                });
+            });
+        });
+
+        async function mineBlock(difficulty) {
+            console.log(difficulty); // Debugging statement to check the difficulty value
+
+            const button = document.getElementById(difficulty + 'Button');
+            disableButton(button);
+
+            // Start the timer
+            const startTime = performance.now();
+
+            // Simulate mining process
+            const previousProofResponse = await fetch('/get_previous_proof');
+            const previousProofData = await previousProofResponse.json();
+            const previousProof = previousProofData.previous_proof;
+
+            let proof = 1;
+            let checkProof = false;
+            let leadingZeros;
+            if (difficulty === 'easy') {
+                leadingZeros = '00000';
+            } else if (difficulty === 'medium') {
+                leadingZeros = '000000';
+            } else if (difficulty === 'hard') {
+                leadingZeros = '0000000';
+            } else if (difficulty ==='₿') {
+                leadingZeros = '00000000000000000000';
+            }
+
+            // Perform multiple iterations to increase CPU load
+            const iterations = 1000000; // Adjust this number to control the load
+            for (let i = 0; i < iterations; i++) {
+                while (!checkProof) {
+                    proof += Math.floor(Math.random() * 2) + 1; // Random increment between 1 and 10
+                    const hashOperation = await sha256((proof ** 2 - previousProof ** 2).toString());
+                    if (hashOperation.substring(0, leadingZeros.length) === leadingZeros) {
+                        checkProof = true;
+                    }
+                }
+            }
+
+            // Stop the timer
+            const endTime = performance.now();
+            const speed = (endTime - startTime) / 1000; // Convert to seconds
+
+            const blockData = {
+                proof: proof,
+                speed: speed,
+                difficulty: difficulty
+            };
+
+            const response = await fetch('/mine_block', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(blockData)
+            });
+            const data = await response.json();
+            document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+
+            button.disabled = false;
+            button.textContent = 'Mine a Block- ' + capitalizeFirstLetter(difficulty) + '';
+        }
+
+        function disableButton(button) {
+            button.disabled = true;
+            button.textContent = 'Mining...';
+        }
+
+        window.addEventListener('pageshow', function () {
+            const buttons = ['easyButton', 'mediumButton', 'hardButton', '₿Button'];
+            buttons.forEach(id => {
+                const button = document.getElementById(id);
+                if (button) {
+                    button.disabled = false;
+                    button.textContent = 'Mine a Block ( ' + capitalizeFirstLetter(id.replace('Button', '')) + ' )';
+                }
+            });
+        });
+
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+</script>
+{% endblock %}

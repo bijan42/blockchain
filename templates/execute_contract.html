@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="execute-contract-container">
+    <h1 class="execute-title">Execute Smart Contract</h1>
+
+    <!-- Execute Contract Form -->
+    <form action="{{ url_for('execute_contract_view', contract_id='') }}" method="POST" class="execute-form">
+        <!-- Contract ID Input -->
+        <div class="form-group">
+            <label for="contract_id">Contract ID:</label>
+            <input type="text" id="contract_id" name="contract_id" class="form-input" placeholder="Enter Contract ID" required>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="execute-button">Execute Contract</button>
+    </form>
+
+    <!-- Back Link -->
+    <a href="{{ url_for('account') }}" class="back-link">Back to Account</a>
+</div>
+
+<style>
+    /* Container for the execute contract form */
+    .execute-contract-container {
+        background-color: #1e1e2e;
+        color: #cfd8dc;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        margin: 20px auto;
+        max-width: 50%;
+    }
+
+    .execute-title {
+        color: #bb86fc;
+        font-size: 2em;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .execute-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .form-input {
+        background-color: #2e2e3f;
+        color: #cfd8dc;
+        border: 1px solid #3f3f51;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 1em;
+        width: 100%;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #bb86fc;
+        box-shadow: 0px 0px 5px rgba(187, 134, 252, 0.5);
+    }
+
+    .execute-button {
+        padding: 10px 20px;
+        background-color: #bb86fc;
+        color: #1e1e2e;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        align-self: center;
+    }
+
+    .execute-button:hover {
+        background-color: #9b6acb;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-top: 20px;
+        text-align: center;
+        color: #bb86fc;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .back-link:hover {
+        color: #9b6acb;
+    }
+</style>
+
+{% endblock content %}
+

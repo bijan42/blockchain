@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        body {
+            background-image: url('https://th.bing.com/th/id/R.323fd41aa86325525262450d6dd7fda2?rik=t7KS5Mi28F4qcA&pid=ImgRaw&r=0');
+        background-size: cover;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        }
+        .profile-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 20px auto;
+            text-align: center;
+        }
+        .profile-avatar {
+            margin-bottom: 20px;
+        }
+        .profile-details {
+            display: inline-block;
+            text-align: left;
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 1em;
+            line-height: 1.5;
+            margin: 10px 0;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+        }
+        .page-item .page-link {
+            color: #007bff;
+            padding: 10px 15px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .page-item.disabled .page-link {
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-avatar">
+            <img src="{{ user.avatar(256) }}" alt="User Avatar">
+        </div>
+        <div class="profile-details">
+            <h1>{{ user.username }}</h1>
+            {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+            {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
+            <p>{{ user.followers_count() }} followers, {{ user.following_count() }} following.</p>
+            {% if user == current_user %}
+                <p><a href="{{ url_for('edit_profile') }}">Edit your profile</a></p>
+            {% elif not current_user.is_following(user) %}
+                <p>
+                    <form action="{{ url_for('follow', username=user.username) }}" method="post">
+                        {{ form.hidden_tag() }}
+                        {{ form.submit(value='Follow', class_='btn btn-primary') }}
+                    </form>
+                </p>
+            {% else %}
+                <p>
+                    <form action="{{ url_for('unfollow', username=user.username) }}" method="post">
+                        {{ form.hidden_tag() }}
+                        {{ form.submit(value='Unfollow', class_='btn btn-primary') }}
+                    </form>
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% for post in posts %}
+        {% include '_post.html' %}
+    {% endfor %}
+    <nav aria-label="Post navigation">
+        <ul class="pagination">
+            <li class="page-item{% if not prev_url %} disabled{% endif %}">
+                <a class="page-link" href="{{ prev_url }}">
+                    <span aria-hidden="true">←</span> Newer posts
+                </a>
+            </li>
+            <li class="page-item{% if not next_url %} disabled{% endif %}">
+                <a class="page-link" href="{{ next_url }}">
+                    Older posts <span aria-hidden="true">→</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</body>
+
+{% endblock %}

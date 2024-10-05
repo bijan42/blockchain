@@ -1,0 +1,192 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+    /* Scope styles to this specific container */
+    .smart-contract-container {
+        padding: 20px;
+        background-color: #1e1e2e;
+        border-radius: 8px;
+        margin-top: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .smart-contract-container h1, .smart-contract-container h2 {
+        color: #bb86fc;
+        text-shadow: 1px 1px 2px #000;
+    }
+
+    .smart-contract-container a {
+        color: #bb86fc;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .smart-contract-container a:hover {
+        color: #ffffff;
+    }
+
+    .smart-contract-container ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .smart-contract-container ul li {
+        margin-bottom: 10px;
+    }
+
+    .smart-contract-container .action-buttons a {
+        display: inline-block;
+        margin-right: 10px;
+        padding: 8px 12px;
+        border: 1px solid #3f51b5;
+        border-radius: 5px;
+        background-color: #3f51b5;
+        color: #ffffff;
+        text-decoration: white;
+        transition: background-color 0.2s, color 0.2s;
+    }
+
+    .smart-contract-container .action-buttons a:hover {
+        background-color: #5a74db;
+    }
+
+    .smart-contract-container table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: #2d2d3a;
+        border-radius: 8px;
+        overflow: hidden;
+
+    }
+
+    .smart-contract-container thead {
+        background-color: #3f51b5;
+        color: #ffffff;
+    }
+
+    .smart-contract-container th, .smart-contract-container td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #3f3f51;
+        color: #ffffff;
+    }
+
+    .smart-contract-container tbody tr:hover {
+        background-color: #34344b;
+
+
+    }
+
+    .smart-contract-container tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .smart-contract-container .status-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .smart-contract-container .status-executed {
+        background-color: #4caf50;
+        color: #ffffff;
+    }
+
+    .smart-contract-container .status-not-executed {
+        background-color: #f44336;
+        color: #ffffff;
+    }
+
+    .smart-contract-container .view-icon, .smart-contract-container .execute-icon {
+        font-size: 1.2em;
+        margin-right: 5px;
+    }
+
+    .smart-contract-container .back-link {
+        margin-top: 20px;
+    }
+
+    .smart-contract-container .back-link a {
+        display: inline-block;
+        padding: 8px 12px;
+        border: 1px solid #bb86fc;
+        border-radius: 5px;
+        background-color: #bb86fc;
+        color: #1e1e2e;
+        text-decoration: none;
+        transition: background-color 0.2s, color 0.2s;
+    }
+
+    .smart-contract-container .back-link a:hover {
+        background-color: #ffffff;
+        color: #1e1e2e;
+    }
+</style>
+
+<div class="container smart-contract-container">
+    <h1>Smart Contract Dashboard</h1>
+
+    <div class="actions">
+        <h2>Actions</h2>
+        <ul>
+            <li class="action-buttons">
+                <a href="{{ url_for('create_contract_view') }}">
+                    <i class="view-icon">📝</i>Create a Smart Contract
+                </a>
+            </li>
+            <li class="action-buttons">
+                <a href="{{ url_for('execute_contract_view') }}">
+                    <i class="execute-icon">⚙️</i>Execute a Smart Contract
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="contracts">
+        <h2>Contracts</h2>
+        {% if contracts %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Contract ID</th>
+                        <th>Creator</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contract in contracts %}
+                    <tr>
+                        <td>{{ contract.contract_id }}</td>
+                        <td>{{ contract.creator }}</td>
+                        <td>
+                            <span class="status-badge {{ 'status-executed' if contract.is_executed else 'status-not-executed' }}">
+                                {{ 'Executed' if contract.is_executed else 'Not Executed' }}
+                            </span>
+                        </td>
+                        <td class="action-buttons">
+                            <a href="{{ url_for('view_contract_view', contract_id=contract.contract_id) }}">
+                                <i class="view-icon">👁️</i>View
+                            </a>
+                            {% if not contract.is_executed %}
+                            <a href="{{ url_for('execute_contract_view') }}">
+                                <i class="execute-icon">⚙️</i>Execute
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No contracts found.</p>
+        {% endif %}
+    </div>
+
+    <div class="back-link">
+        <a href="{{ url_for('account') }}">⬅️ Back to Account</a>
+    </div>
+</div>
+{% endblock content %}
